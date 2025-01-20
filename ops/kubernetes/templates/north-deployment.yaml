@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nomad-north
+  labels:
+    app: nomad
+    component: north
+spec:
+  replicas: {{ .Values.north.replicaCount }}
+  selector:
+    matchLabels:
+      app: nomad
+      component: north
+  template:
+    metadata:
+      labels:
+        app: nomad
+        component: north
+    spec:
+      containers:
+      - name: north
+        image: "{{ .Values.north.image.repository }}:{{ .Values.north.image.tag }}"
+        imagePullPolicy: {{ .Values.north.image.pullPolicy }}
+        env:
+        {{- range $key, $value := .Values.north.env }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        ports:
+        - containerPort: 8081
+        resources:
+          {{- toYaml .Values.north.resources | nindent 10 }}
+        livenessProbe:
+          httpGet:
+            path: /-/health
+            port: 8081
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 10
+          failureThreshold: 30
+        readinessProbe:
+          httpGet:
+            path: /-/health
+            port: 8081
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 10
+          failureThreshold: 30
+          volumeMounts:
+            - name: shared-volume
+              mountPath: /app/.volumes/fs
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+      volumes:
+      - name: fs-volume
+        persistentVolumeClaim:
+          claimName: nomad-fs-pvc
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nomad-north
+  labels:
+    app: nomad
+    component: north
+spec:
+  ports:
+  - port: 8081
+    targetPort: 8081
+  selector:
+    app: nomad
+    component: north

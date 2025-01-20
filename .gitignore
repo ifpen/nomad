@@ -63,6 +63,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Helm generated files
+ops/kubernetes/charts/
+ops/kubernetes/Chart.lock
+
 # C extensions
 *.so
 

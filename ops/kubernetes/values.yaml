@@ -1,0 +1,96 @@
+global:
+  storageClass: ""
+  volumeSize: 10Gi
+
+
+sharedVolume:
+  enabled: true
+  storageClass: "{{ .Values.global.storageClass }}"
+  size: "20Gi"
+  accessModes:
+    - ReadWriteMany
+
+rabbitmq:
+  persistence:
+    enabled: true
+    storageClass: ""
+    size: "5Gi"
+    accessModes:
+      - ReadWriteMany
+
+elasticsearch:
+  volumeClaimTemplate:
+    accessModes: ["ReadWriteOnce"]
+    storageClassName: ""
+    resources:
+      requests:
+        storage: "20Gi"
+
+mongodb:
+  persistence:
+    enabled: true
+    storageClass: ""
+    size: "5Gi"
+    accessModes:
+      - ReadWriteMany
+
+app:
+  replicaCount: 1
+  image:
+    repository: gitlab-registry.mpcdf.mpg.de/nomad-lab/nomad-fair
+    tag: latest
+    pullPolicy: IfNotPresent
+  resources: {}
+  env:
+    NOMAD_SERVICE: nomad_oasis_app
+    NOMAD_SERVICES_API_PORT: 80
+    NOMAD_FS_EXTERNAL_WORKING_DIRECTORY: /app/.volumes/fs
+    NOMAD_RABBITMQ_HOST: rabbitmq
+    NOMAD_ELASTIC_HOST: elastic
+    NOMAD_MONGO_HOST: mongo
+    NOMAD_NORTH_HUB_HOST: north
+
+worker:
+  replicaCount: 1
+  image:
+    repository: gitlab-registry.mpcdf.mpg.de/nomad-lab/nomad-fair
+    tag: latest
+    pullPolicy: IfNotPresent
+  resources: {}
+  env:
+    NOMAD_SERVICE: nomad_oasis_worker
+    NOMAD_RABBITMQ_HOST: rabbitmq
+    NOMAD_ELASTIC_HOST: elastic
+    NOMAD_MONGO_HOST: mongo
+
+north:
+  replicaCount: 1
+  image:
+    repository: gitlab-registry.mpcdf.mpg.de/nomad-lab/nomad-fair
+    tag: latest
+    pullPolicy: IfNotPresent
+  resources: {}
+  env:
+    NOMAD_SERVICE: nomad_oasis_north
+    NOMAD_NORTH_DOCKER_NETWORK: nomad_oasis_network
+    NOMAD_NORTH_HUB_CONNECT_IP: north
+    NOMAD_NORTH_HUB_IP: "0.0.0.0"
+    NOMAD_NORTH_HUB_HOST: north
+    NOMAD_SERVICES_API_HOST: app
+    NOMAD_FS_EXTERNAL_WORKING_DIRECTORY: /app/.volumes/fs
+    NOMAD_RABBITMQ_HOST: rabbitmq
+    NOMAD_ELASTIC_HOST: elastic
+    NOMAD_MONGO_HOST: mongo
+
+proxy:
+  enabled: true
+  service:
+    type: ClusterIP
+    port: 80
+  ingress:
+    enabled: false
+
+networkPolicies:
+  enabled: true
+  allowAll: false
+  allowedNamespaces: []

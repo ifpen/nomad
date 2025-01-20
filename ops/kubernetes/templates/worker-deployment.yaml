@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nomad-worker
+  labels:
+    app: nomad
+    component: worker
+spec:
+  replicas: {{ .Values.worker.replicaCount }}
+  selector:
+    matchLabels:
+      app: nomad
+      component: worker
+  template:
+    metadata:
+      labels:
+        app: nomad
+        component: worker
+    spec:
+      containers:
+      - name: worker
+        image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
+        imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
+        env:
+        {{- range $key, $value := .Values.worker.env }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.worker.resources | nindent 10 }}
+        livenessProbe:
+          exec:
+            command:
+            - pgrep
+            - python
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 10
+          failureThreshold: 30
+        readinessProbe:
+          exec:
+            command:
+            - pgrep
+            - python
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 10
+          failureThreshold: 30
+          volumeMounts:
+            - name: shared-volume
+              mountPath: /app/.volumes/fs
+      volumes:
+      - name: fs-volume
+        persistentVolumeClaim:
+          claimName: nomad-fs-pvc

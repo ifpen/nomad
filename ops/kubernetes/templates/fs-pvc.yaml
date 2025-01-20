@@ -1,0 +1,13 @@
+{{- if .Values.sharedVolume.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: shared-volume
+spec:
+  accessModes:
+    {{- toYaml .Values.sharedVolume.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: "{{ .Values.sharedVolume.size }}"
+  storageClassName: "{{ .Values.sharedVolume.storageClass }}"
+{{- end }}

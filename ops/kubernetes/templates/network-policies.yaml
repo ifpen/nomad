@@ -1,0 +1,118 @@
+{{- if .Values.networkPolicies.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-namespace-traffic
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: {{ .Release.Namespace }}
+    - podSelector: {}
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: {{ .Release.Namespace }}
+    - podSelector: {}
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-db-access
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "nomad.name" . }}
+      component: mongo
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: {{ template "nomad.name" . }}
+          component: app
+    - podSelector:
+        matchLabels:
+          app: {{ template "nomad.name" . }}
+          component: worker
+    - podSelector:
+        matchLabels:
+          app: {{ template "nomad.name" . }}
+          component: north
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-rabbitmq-access
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "nomad.name" . }}
+      component: rabbitmq
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: {{ template "nomad.name" . }}
+          component: worker
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-elastic-access
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "nomad.name" . }}
+      component: elastic
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: {{ template "nomad.name" . }}
+          component: app
+    - podSelector:
+        matchLabels:
+          app: {{ template "nomad.name" . }}
+          component: worker
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-north-access
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "nomad.name" . }}
+      component: north
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: {{ template "nomad.name" . }}
+          component: app
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-proxy-access
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "nomad.name" . }}
+      component: proxy
+  ingress:
+  - ports:
+    - port: 80
+    from: []
+{{- end }}

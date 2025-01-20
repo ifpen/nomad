@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nomad-app
+  labels:
+    app: nomad
+    component: app
+spec:
+  replicas: {{ .Values.app.replicaCount }}
+  selector:
+    matchLabels:
+      app: nomad
+      component: app
+  template:
+    metadata:
+      labels:
+        app: nomad
+        component: app
+    spec:
+      containers:
+      - name: app
+        image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+        imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+        env:
+        {{- range $key, $value := .Values.app.env }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        ports:
+        - containerPort: 80
+        resources:
+          {{- toYaml .Values.app.resources | nindent 10 }}
+        livenessProbe:
+          httpGet:
+            path: /-/health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 10
+          failureThreshold: 30
+        readinessProbe:
+          httpGet:
+            path: /-/health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 10
+          failureThreshold: 30
+          volumeMounts:
+            - name: shared-volume
+              mountPath: /app/.volumes/fs
+      volumes:
+      - name: fs-volume
+        persistentVolumeClaim:
+          claimName: nomad-fs-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nomad-app
+  labels:
+    app: nomad
+    component: app
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: nomad
+    component: app
