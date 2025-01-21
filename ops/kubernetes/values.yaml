@@ -21,6 +21,11 @@ sharedVolume:
 
 rabbitmq:
   enabled: true
+  commonLabels:
+    app: "{{ .Release.Name }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace \"+\" \"_\" }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
   nameOverride: "{{ .Release.Name }}-rabbitmq"
   condition: rabbitmq.enabled
   fullnameOverride: "{{ .Release.Name }}-rabbitmq"
@@ -64,6 +69,11 @@ mongodb:
   enabled: true
   condition: mongodb.enabled
   clusterDomain: cluster.local
+  commonLabels:
+    app: "{{ .Release.Name }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace \"+\" \"_\" }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
   auth:
     enabled: true
     rootUser: root
@@ -143,7 +153,7 @@ ingress:
   # Hostname for the ingress
   host: nomad-oasis.example.com
   # Ingress annotations
-  annotations: {}
+  annotations: 
     # Example annotations:
     #   nginx.ingress.kubernetes.io/ssl-redirect: "true"
     #   nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
