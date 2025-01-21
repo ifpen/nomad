@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: shared-volume
+  name: {{ .Release.Name }}-fs-pvc
 spec:
   accessModes:
     {{- toYaml .Values.sharedVolume.accessModes | nindent 4 }}

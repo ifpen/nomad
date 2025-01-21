@@ -48,4 +48,4 @@ spec:
       volumes:
       - name: shared-volume
         persistentVolumeClaim:
-          claimName: nomad-fs-pvc
+          claimName: {{ .Release.Name }}-fs-pvc
