@@ -42,29 +42,6 @@ rabbitmq:
     RABBITMQ_DEFAULT_PASS: rabbitmq
     RABBITMQ_DEFAULT_VHOST: /
 
-elasticsearch:
-  enabled: true
-  condition: elasticsearch.enabled
-  clusterName: "{{ .Release.Name }}-elastic"
-  replicas: 1
-  roles:
-    - master
-    - data
-  protocol: http
-  createCert: false
-  extraEnvs:
-   - name: xpack.security.enabled
-     value: "false"
-  esConfig:
-    elasticsearch.yml: |
-      node.store.allow_mmap: false
-      xpack.security.authc:
-        anonymous:
-          authz_exception: false
-          roles: superuser
-          username: anonymous
-  clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
-
 mongodb:
   enabled: true
   condition: mongodb.enabled
@@ -97,7 +74,7 @@ app:
     NOMAD_SERVICES_API_PORT: 80
     NOMAD_FS_EXTERNAL_WORKING_DIRECTORY: /app/.volumes/fs
     NOMAD_RABBITMQ_HOST: "{{ .Release.Name }}-rabbitmq"
-    NOMAD_ELASTIC_HOST: "{{ .Release.Name }}-elastic-master"
+    NOMAD_ELASTIC_HOST: "{{ .Release.Name }}-elastic"
     NOMAD_MONGO_HOST: "{{ .Release.Name }}-mongodb"
     NOMAD_MONGO_USERNAME: root
     NOMAD_MONGO_PASSWORD: "{{ .Values.mongodb.auth.rootPassword }}"
@@ -113,7 +90,7 @@ worker:
   env:
     NOMAD_SERVICE: nomad_oasis_worker
     NOMAD_RABBITMQ_HOST: "{{ .Release.Name }}-rabbitmq"
-    NOMAD_ELASTIC_HOST: "{{ .Release.Name }}-elastic-master"
+    NOMAD_ELASTIC_HOST: "{{ .Release.Name }}-elastic"
     NOMAD_MONGO_HOST: "{{ .Release.Name }}-mongodb"
     NOMAD_MONGO_USERNAME: root
     NOMAD_MONGO_PASSWORD: "{{ .Values.mongodb.auth.rootPassword }}"
@@ -134,7 +111,7 @@ north:
     NOMAD_SERVICES_API_HOST: app
     NOMAD_FS_EXTERNAL_WORKING_DIRECTORY: /app/.volumes/fs
     NOMAD_RABBITMQ_HOST: "{{ .Release.Name }}-rabbitmq"
-    NOMAD_ELASTIC_HOST: "{{ .Release.Name }}-elastic-master"
+    NOMAD_ELASTIC_HOST: "{{ .Release.Name }}-elastic"
     NOMAD_MONGO_HOST: "{{ .Release.Name }}-mongodb"
     NOMAD_MONGO_USERNAME: root
     NOMAD_MONGO_PASSWORD: "{{ .Values.mongodb.auth.rootPassword }}"
@@ -153,7 +130,7 @@ ingress:
   # Hostname for the ingress
   host: nomad-oasis.example.com
   # Ingress annotations
-  annotations: 
+  annotations:
     # Example annotations:
     #   nginx.ingress.kubernetes.io/ssl-redirect: "true"
     #   nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
