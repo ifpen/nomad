@@ -3,7 +3,7 @@ entries:
   nomad:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-20T23:39:39.698626797Z"
+    created: "2025-01-21T09:41:43.854931026Z"
     dependencies:
     - name: rabbitmq
       repository: https://charts.bitnami.com/bitnami
@@ -14,16 +14,35 @@ entries:
     - name: mongodb
       repository: https://charts.bitnami.com/bitnami
       version: 13.6.0
-    - name: nginx
-      repository: https://charts.bitnami.com/bitnami
-      version: 13.2.23
     - name: jupyterhub
       repository: https://jupyterhub.github.io/helm-chart
       version: 3.0.3
     description: A Helm chart to deploy NOMAD in Kubernetes
-    digest: daa03cb88d1ccae8507fc4f275c9c17d968677cfea538d37480e96f69f280c71
+    digest: 895a7cbe98f7ab71861a8cc50298c5ce207013ff49fd5a49154b97908af4f971
     name: nomad
     urls:
-    - https://raw.githubusercontent.com/mechermu/helm-charts/main/nomad-0.1.0.tgz
+    - https://ifpen.github.io/nomad/nomad-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-01-21T09:41:43.83796056Z"
+    dependencies:
+    - name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.10.0
+    - name: elasticsearch
+      repository: https://helm.elastic.co
+      version: 7.17.3
+    - name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 13.6.0
+    - name: jupyterhub
+      repository: https://jupyterhub.github.io/helm-chart
+      version: 3.0.3
+    description: A Helm chart to deploy NOMAD in Kubernetes
+    digest: 50b7632fa9dde06e5a0d1b583344bdcc726c76892b147ece5dfb354e3e6eff94
+    name: nomad
+    urls:
+    - https://ifpen.github.io/nomad/nomad-0.1.0.tgz
     version: 0.1.0
-generated: "2025-01-20T23:39:39.683553891Z"
+generated: "2025-01-21T09:41:43.82166962Z"
