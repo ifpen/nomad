@@ -25,6 +25,32 @@ entries:
     digest: 0e06f86ba3a9787f24a83346ea8879d4355c4c74ab32d83ed43fe92e9f0fac0c
     name: nomad
     urls:
+    - nomad-0.1.12.tgz
+    version: 0.1.12
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-01-21T11:57:23.151381441Z"
+    dependencies:
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.10.0
+    - condition: elasticsearch.enabled
+      name: elasticsearch
+      repository: https://helm.elastic.co
+      version: 7.17.3
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 13.6.0
+    - condition: jupyterhub.enabled
+      name: jupyterhub
+      repository: https://jupyterhub.github.io/helm-chart
+      version: 3.0.3
+    description: A Helm chart to deploy NOMAD in Kubernetes
+    digest: 0e06f86ba3a9787f24a83346ea8879d4355c4c74ab32d83ed43fe92e9f0fac0c
+    name: nomad
+    urls:
     - nomad-0.1.11.tgz
     version: 0.1.11
   - apiVersion: v2
