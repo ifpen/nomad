@@ -22,10 +22,24 @@ spec:
         image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
         imagePullPolicy: {{ .Values.app.image.pullPolicy }}
         env:
-        {{- range $key, $value := .Values.app.env }}
-        - name: {{ $key }}
-          value: {{ $value | quote }}
-        {{- end }}
+          {{- range $key, $value := .Values.app.env }}
+          - name: {{ $key }}
+            value: {{ $value | quote }}
+          {{- end }}
+          - name: NOMAD_MONGO_USERNAME
+            value: {{ .Values.mongodb.auth.rootUser | quote }}
+          - name: NOMAD_MONGO_PASSWORD
+            value: {{ .Values.mongodb.auth.rootPassword | quote }}
+          {{- if .Values.global.proxy.http.host }}
+          - name: HTTP_PROXY
+            value: {{ printf "%s://%s:%s" .Values.global.proxy.http.protocol .Values.global.proxy.http.host .Values.global.proxy.http.port | quote }}
+          {{- end }}
+          {{- if .Values.global.proxy.https.host }}
+          - name: HTTPS_PROXY
+            value: {{ printf "%s://%s:%s" .Values.global.proxy.https.protocol .Values.global.proxy.https.host .Values.global.proxy.https.port | quote }}
+          {{- end }}
+          - name: NO_PROXY
+            value: {{ .Values.global.proxy.no_proxy | quote }}
         ports:
         - containerPort: 80
         resources:
@@ -46,11 +60,11 @@ spec:
           periodSeconds: 10
           timeoutSeconds: 10
           failureThreshold: 30
-          volumeMounts:
-            - name: shared-volume
-              mountPath: /app/.volumes/fs
+        volumeMounts:
+          - name: shared-volume
+            mountPath: /app/.volumes/fs
       volumes:
-      - name: fs-volume
+      - name: shared-volume
         persistentVolumeClaim:
           claimName: nomad-fs-pvc
 ---

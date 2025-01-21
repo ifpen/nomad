@@ -1,7 +1,16 @@
 global:
   storageClass: ""
   volumeSize: 10Gi
-
+  proxy:
+    http:
+      host: ""
+      port: ""
+      protocol: "http"
+    https:
+      host: ""
+      port: ""
+      protocol: "https"
+    no_proxy: "localhost,127.0.0.1,.cluster.local,.svc,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,169.254.0.0/16"
 
 sharedVolume:
   enabled: true
@@ -11,22 +20,50 @@ sharedVolume:
     - ReadWriteMany
 
 rabbitmq:
+  enabled: true
+  fullnameOverride: "{{ .Release.Name }}-rabbitmq"
+  clusterDomain: cluster.local
   persistence:
     enabled: true
     storageClass: ""
     size: "5Gi"
     accessModes:
       - ReadWriteMany
+  env:
+    RABBITMQ_ERLANG_COOKIE: SWQOKODSQALRPCLNMEQG
+    RABBITMQ_DEFAULT_USER: rabbitmq
+    RABBITMQ_DEFAULT_PASS: rabbitmq
+    RABBITMQ_DEFAULT_VHOST: /
 
 elasticsearch:
-  volumeClaimTemplate:
-    accessModes: ["ReadWriteOnce"]
-    storageClassName: ""
-    resources:
-      requests:
-        storage: "20Gi"
+  enabled: true
+  clusterName: "{{ .Release.Name }}-elastic"
+  replicas: 1
+  roles:
+    - master
+    - data
+  protocol: http
+  createCert: false
+  extraEnvs:
+   - name: xpack.security.enabled
+     value: "false"
+  esConfig:
+    elasticsearch.yml: |
+      node.store.allow_mmap: false
+      xpack.security.authc:
+        anonymous:
+          authz_exception: false
+          roles: superuser
+          username: anonymous
+  clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
 
 mongodb:
+  enabled: true
+  clusterDomain: cluster.local
+  auth:
+    enabled: true
+    rootUser: root
+    rootPassword: "P@SSN0TS@F3"
   persistence:
     enabled: true
     storageClass: ""
@@ -45,9 +82,11 @@ app:
     NOMAD_SERVICE: nomad_oasis_app
     NOMAD_SERVICES_API_PORT: 80
     NOMAD_FS_EXTERNAL_WORKING_DIRECTORY: /app/.volumes/fs
-    NOMAD_RABBITMQ_HOST: rabbitmq
-    NOMAD_ELASTIC_HOST: elastic
-    NOMAD_MONGO_HOST: mongo
+    NOMAD_RABBITMQ_HOST: {{ .Release.Name }}-rabbitmq
+    NOMAD_ELASTIC_HOST: {{ .Release.Name }}-elastic-master
+    NOMAD_MONGO_HOST: {{ .Release.Name }}-mongodb
+    NOMAD_MONGO_USERNAME: root
+    NOMAD_MONGO_PASSWORD: "{{ .Values.mongodb.auth.rootPassword }}"
     NOMAD_NORTH_HUB_HOST: north
 
 worker:
@@ -59,9 +98,11 @@ worker:
   resources: {}
   env:
     NOMAD_SERVICE: nomad_oasis_worker
-    NOMAD_RABBITMQ_HOST: rabbitmq
-    NOMAD_ELASTIC_HOST: elastic
-    NOMAD_MONGO_HOST: mongo
+    NOMAD_RABBITMQ_HOST: {{ .Release.Name }}-rabbitmq
+    NOMAD_ELASTIC_HOST: {{ .Release.Name }}-elastic-master
+    NOMAD_MONGO_HOST: {{ .Release.Name }}-mongodb
+    NOMAD_MONGO_USERNAME: root
+    NOMAD_MONGO_PASSWORD: "{{ .Values.mongodb.auth.rootPassword }}"
 
 north:
   replicaCount: 1
@@ -78,9 +119,11 @@ north:
     NOMAD_NORTH_HUB_HOST: north
     NOMAD_SERVICES_API_HOST: app
     NOMAD_FS_EXTERNAL_WORKING_DIRECTORY: /app/.volumes/fs
-    NOMAD_RABBITMQ_HOST: rabbitmq
-    NOMAD_ELASTIC_HOST: elastic
-    NOMAD_MONGO_HOST: mongo
+    NOMAD_RABBITMQ_HOST: {{ .Release.Name }}-rabbitmq
+    NOMAD_ELASTIC_HOST: {{ .Release.Name }}-elastic-master
+    NOMAD_MONGO_HOST: {{ .Release.Name }}-mongodb
+    NOMAD_MONGO_USERNAME: root
+    NOMAD_MONGO_PASSWORD: "{{ .Values.mongodb.auth.rootPassword }}"
 
 proxy:
   enabled: true
@@ -89,6 +132,39 @@ proxy:
     port: 80
   ingress:
     enabled: false
+
+ingress:
+  # Enable ingress configuration
+  enabled: true
+  # Hostname for the ingress
+  host: nomad-oasis.example.com
+  # Ingress annotations
+  annotations: {}
+    # Example annotations:
+    #   nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    #   nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    #   cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  # Use existing ingress controller in the cluster
+  useExistingController: true
+  nginx:
+    # Enable standalone nginx deployment (only if useExistingController is false)
+    enabled: false
+    # Number of nginx replicas
+    replicaCount: 1
+    image:
+      # Nginx image repository
+      repository: nginx
+      # Nginx image tag
+      tag: "1.25.3-alpine"
+      # Image pull policy
+      pullPolicy: IfNotPresent
+    # Resource requests/limits
+    resources: {}
+    service:
+      # Service type for nginx
+      type: LoadBalancer
+      # Service port
+      port: 80
 
 networkPolicies:
   enabled: true

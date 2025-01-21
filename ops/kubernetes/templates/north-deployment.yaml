@@ -22,54 +22,30 @@ spec:
         image: "{{ .Values.north.image.repository }}:{{ .Values.north.image.tag }}"
         imagePullPolicy: {{ .Values.north.image.pullPolicy }}
         env:
-        {{- range $key, $value := .Values.north.env }}
-        - name: {{ $key }}
-          value: {{ $value | quote }}
-        {{- end }}
-        ports:
-        - containerPort: 8081
+          {{- range $key, $value := .Values.north.env }}
+          - name: {{ $key }}
+            value: {{ $value | quote }}
+          {{- end }}
+          - name: NOMAD_MONGO_USERNAME
+            value: {{ .Values.mongodb.auth.rootUser | quote }}
+          - name: NOMAD_MONGO_PASSWORD
+            value: {{ .Values.mongodb.auth.rootPassword | quote }}
+          {{- if .Values.global.proxy.http.host }}
+          - name: HTTP_PROXY
+            value: {{ printf "%s://%s:%s" .Values.global.proxy.http.protocol .Values.global.proxy.http.host .Values.global.proxy.http.port | quote }}
+          {{- end }}
+          {{- if .Values.global.proxy.https.host }}
+          - name: HTTPS_PROXY
+            value: {{ printf "%s://%s:%s" .Values.global.proxy.https.protocol .Values.global.proxy.https.host .Values.global.proxy.https.port | quote }}
+          {{- end }}
+          - name: NO_PROXY
+            value: {{ .Values.global.proxy.no_proxy | quote }}
         resources:
           {{- toYaml .Values.north.resources | nindent 10 }}
-        livenessProbe:
-          httpGet:
-            path: /-/health
-            port: 8081
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          timeoutSeconds: 10
-          failureThreshold: 30
-        readinessProbe:
-          httpGet:
-            path: /-/health
-            port: 8081
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          timeoutSeconds: 10
-          failureThreshold: 30
-          volumeMounts:
-            - name: shared-volume
-              mountPath: /app/.volumes/fs
-        - name: docker-sock
-          mountPath: /var/run/docker.sock
+        volumeMounts:
+          - name: shared-volume
+            mountPath: /app/.volumes/fs
       volumes:
-      - name: fs-volume
+      - name: shared-volume
         persistentVolumeClaim:
           claimName: nomad-fs-pvc
-      - name: docker-sock
-        hostPath:
-          path: /var/run/docker.sock
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: nomad-north
-  labels:
-    app: nomad
-    component: north
-spec:
-  ports:
-  - port: 8081
-    targetPort: 8081
-  selector:
-    app: nomad
-    component: north

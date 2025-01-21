@@ -1,0 +1,38 @@
+{{- if and .Values.ingress.nginx.enabled (not .Values.ingress.useExistingController) }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-nginx
+  labels:
+    app: {{ .Release.Name }}-nginx
+spec:
+  replicas: {{ .Values.ingress.nginx.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-nginx
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-nginx
+    spec:
+      containers:
+      - name: nginx
+        image: {{ .Values.ingress.nginx.image.repository }}:{{ .Values.ingress.nginx.image.tag }}
+        imagePullPolicy: {{ .Values.ingress.nginx.image.pullPolicy }}
+        ports:
+        - containerPort: 80
+        resources:
+          {{- toYaml .Values.ingress.nginx.resources | nindent 10 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-nginx
+spec:
+  type: {{ .Values.ingress.nginx.service.type }}
+  ports:
+  - port: {{ .Values.ingress.nginx.service.port }}
+    targetPort: 80
+  selector:
+    app: {{ .Release.Name }}-nginx
+{{- end }}

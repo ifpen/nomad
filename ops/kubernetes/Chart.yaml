@@ -13,9 +13,6 @@ dependencies:
   - name: mongodb
     version: 13.6.0
     repository: https://charts.bitnami.com/bitnami
-  - name: nginx
-    version: 13.2.23
-    repository: https://charts.bitnami.com/bitnami
   - name: jupyterhub
     version: 3.0.3
     repository: https://jupyterhub.github.io/helm-chart

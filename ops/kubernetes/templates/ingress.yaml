@@ -1,0 +1,50 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-ingress
+  annotations:
+    {{- if .Values.ingress.useExistingController }}
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/proxy-body-size: "35g"
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      gzip on;
+      gzip_types text/css text/javascript text/xml text/plain application/javascript application/x-javascript application/json;
+      gzip_min_length 1000;
+      gzip_proxied any;
+    {{- else }}
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    {{- end }}
+spec:
+  {{- if .Values.ingress.useExistingController }}
+  tls:
+  - hosts:
+    - {{ .Values.ingress.host }}
+  {{- end }}
+  rules:
+  - host: {{ .Values.ingress.host }}
+    http:
+      paths:
+      - path: /nomad-oasis/gui(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: app
+            port:
+              number: 8000
+      - path: /nomad-oasis/north(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: north
+            port:
+              number: 9000
+      - path: /nomad-oasis/api(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: app
+            port:
+              number: 8000
+{{- end }}
