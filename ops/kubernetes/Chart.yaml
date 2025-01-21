@@ -1,7 +1,7 @@
 apiVersion: v2
 name: nomad
 description: A Helm chart to deploy NOMAD in Kubernetes
-version: 0.1.7
+version: 0.1.8
 appVersion: "1.0"
 dependencies:
   - name: rabbitmq
