@@ -167,6 +167,8 @@ ingress:
       port: 80
 
 networkPolicies:
-  enabled: true
-  allowAll: false
+  enabled: false
+  type: native # Possible values: native, cilium, calico
+  proxy:
+    cidr: "" # CIDR for k8s native network policy
   allowedNamespaces: []

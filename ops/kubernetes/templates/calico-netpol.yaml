@@ -1,0 +1,41 @@
+{{- if and .Values.networkPolicies.enabled (eq .Values.networkPolicies.type "calico") }}
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: allow-proxy-access
+spec:
+  selector: app == '{{ template "nomad.name" . }}'
+  egress:
+  - action: Allow
+    destination:
+      domains:
+      {{- if ne .Values.global.proxy.http.host .Values.global.proxy.https.host }}
+      - "{{ .Values.global.proxy.http.host }}"
+      - "{{ .Values.global.proxy.https.host }}"
+      {{- else }}
+      - "{{ .Values.global.proxy.http.host }}"
+      {{- end }}
+      ports:
+      {{- if ne (.Values.global.proxy.http.port | default 80) (.Values.global.proxy.https.port | default 443) }}
+      - "{{ .Values.global.proxy.http.port | default 80 }}"
+      - "{{ .Values.global.proxy.https.port | default 443 }}"
+      {{- else }}
+      - "{{ .Values.global.proxy.http.port | default 80 }}"
+      {{- end }}
+
+---
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: allow-rabbitmq-access
+spec:
+  selector: app == '{{ template "nomad.name" . }}' && component == 'rabbitmq'
+  ingress:
+  - action: Allow
+    source:
+      selector: app == '{{ template "nomad.name" . }}' && component == 'worker'
+  egress:
+  - action: Allow
+    destination:
+      selector: k8s:io.kubernetes.pod.namespace == 'kube-system'
+{{- end }}

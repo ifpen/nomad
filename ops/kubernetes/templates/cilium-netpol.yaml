@@ -1,0 +1,47 @@
+{{- if and .Values.networkPolicies.enabled (eq .Values.networkPolicies.type "cilium") }}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-proxy-access
+spec:
+  endpointSelector:
+    matchLabels:
+      app: {{ template "nomad.name" . }}
+  egress:
+  - toFQDNs:
+    {{- if ne .Values.global.proxy.http.host .Values.global.proxy.https.host }}
+    - matchName: "{{ .Values.global.proxy.http.host }}"
+    - matchName: "{{ .Values.global.proxy.https.host }}"
+    {{- else }}
+    - matchName: "{{ .Values.global.proxy.http.host }}"
+    {{- end }}
+    toPorts:
+    - ports:
+      {{- if ne (.Values.global.proxy.http.port | default 80) (.Values.global.proxy.https.port | default 443) }}
+      - port: "{{ .Values.global.proxy.http.port | default 80 }}"
+      - port: "{{ .Values.global.proxy.https.port | default 443 }}"
+      {{- else }}
+      - port: "{{ .Values.global.proxy.http.port | default 80 }}"
+      {{- end }}
+        protocol: TCP
+
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-rabbitmq-access
+spec:
+  endpointSelector:
+    matchLabels:
+      app: {{ template "nomad.name" . }}
+      component: rabbitmq
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        app: {{ template "nomad.name" . }}
+        component: worker
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: kube-system
+{{- end }}
