@@ -3,7 +3,7 @@ entries:
   nomad:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T11:08:19.994545089Z"
+    created: "2025-01-21T11:14:48.342197686Z"
     dependencies:
     - condition: rabbitmq.enabled
       name: rabbitmq
@@ -25,11 +25,11 @@ entries:
     digest: 4c5564de07cd27c67cbf25861e8dcff3dfdba6149d3c03530909708ca8f17e6c
     name: nomad
     urls:
-    - https://github.com/nomad-coe/nomad-helm-charts/nomad-0.1.5.tgz
+    - nomad-0.1.5.tgz
     version: 0.1.5
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T11:08:19.958535322Z"
+    created: "2025-01-21T11:14:48.325554874Z"
     dependencies:
     - condition: rabbitmq.enabled
       name: rabbitmq
@@ -51,11 +51,11 @@ entries:
     digest: de135830651e5c02812b0949a6fed28565607babb73b60bc4002d501f0019262
     name: nomad
     urls:
-    - https://github.com/nomad-coe/nomad-helm-charts/nomad-0.1.4.tgz
+    - nomad-0.1.4.tgz
     version: 0.1.4
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T11:08:19.929131473Z"
+    created: "2025-01-21T11:14:48.31207836Z"
     dependencies:
     - condition: rabbitmq.enabled
       name: rabbitmq
@@ -77,11 +77,11 @@ entries:
     digest: d89da33aff7429c571e6207c0ffe8ce062b5f9b4356b83ceda7667b9b42e47dd
     name: nomad
     urls:
-    - https://github.com/nomad-coe/nomad-helm-charts/nomad-0.1.3.tgz
+    - nomad-0.1.3.tgz
     version: 0.1.3
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T11:08:19.900473583Z"
+    created: "2025-01-21T11:14:48.298401415Z"
     dependencies:
     - name: rabbitmq
       repository: https://charts.bitnami.com/bitnami
@@ -99,11 +99,11 @@ entries:
     digest: ffb49dc8e128ed2a167a58713abf7783344d2406e978e857d58119f90e03a3df
     name: nomad
     urls:
-    - https://github.com/nomad-coe/nomad-helm-charts/nomad-0.1.2.tgz
+    - nomad-0.1.2.tgz
     version: 0.1.2
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T11:08:19.884648379Z"
+    created: "2025-01-21T11:14:48.281942788Z"
     dependencies:
     - name: rabbitmq
       repository: https://charts.bitnami.com/bitnami
@@ -121,11 +121,11 @@ entries:
     digest: 895a7cbe98f7ab71861a8cc50298c5ce207013ff49fd5a49154b97908af4f971
     name: nomad
     urls:
-    - https://github.com/nomad-coe/nomad-helm-charts/nomad-0.1.1.tgz
+    - nomad-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T11:08:19.862255637Z"
+    created: "2025-01-21T11:14:48.264133288Z"
     dependencies:
     - name: rabbitmq
       repository: https://charts.bitnami.com/bitnami
@@ -146,6 +146,6 @@ entries:
     digest: daa03cb88d1ccae8507fc4f275c9c17d968677cfea538d37480e96f69f280c71
     name: nomad
     urls:
-    - https://github.com/nomad-coe/nomad-helm-charts/nomad-0.1.0.tgz
+    - nomad-0.1.0.tgz
     version: 0.1.0
-generated: "2025-01-21T11:08:19.846708786Z"
+generated: "2025-01-21T11:14:48.249307864Z"
