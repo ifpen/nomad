@@ -2,10 +2,10 @@
 Expand the name of the chart.
 */}}
 {{- define "nomad.name" -}}
-{{- if .Chart -}}
+{{- if .Values -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- else -}}
-{{- default "nomad" .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- default "nomad" .Chart.Name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 {{- end }}
 
