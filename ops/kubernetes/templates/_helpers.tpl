@@ -2,10 +2,7 @@
 Expand the name of the chart.
 */}}
 {{- define "nomad.name" -}}
-{{- $chartName := default "nomad" .Chart.Name -}}
-{{- $nameOverride := default $chartName .Values.nameOverride -}}
-{{- $name := default $chartName $nameOverride -}}
-{{- $name | trunc 63 | trimSuffix "-" -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
@@ -34,12 +31,32 @@ Create chart name and version as used by the chart label.
 {{- end }}
 
 {{/*
-Common labels standard
+Common labels
 */}}
-{{- define "common.labels.standard" -}}
+{{- define "nomad.labels" -}}
+helm.sh/chart: {{ include "nomad.chart" . }}
+{{ include "nomad.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "nomad.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "nomad.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-helm.sh/chart: {{ include "nomad.chart" . }}
+{{- end }}
+
+{{/*
+Create the name of the service account to use
+*/}}
+{{- define "nomad.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "nomad.fullname" .) .Values.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.serviceAccount.name }}
+{{- end }}
 {{- end }}
