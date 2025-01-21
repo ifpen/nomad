@@ -21,6 +21,7 @@ sharedVolume:
 
 rabbitmq:
   enabled: true
+  condition: rabbitmq.enabled
   fullnameOverride: "{{ .Release.Name }}-rabbitmq"
   clusterDomain: cluster.local
   persistence:
@@ -37,6 +38,7 @@ rabbitmq:
 
 elasticsearch:
   enabled: true
+  condition: elasticsearch.enabled
   clusterName: "{{ .Release.Name }}-elastic"
   replicas: 1
   roles:
@@ -59,6 +61,7 @@ elasticsearch:
 
 mongodb:
   enabled: true
+  condition: mongodb.enabled
   clusterDomain: cluster.local
   auth:
     enabled: true

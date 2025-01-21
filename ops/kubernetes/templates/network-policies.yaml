@@ -44,6 +44,7 @@ spec:
           kubernetes.io/metadata.name: kube-system
 
 ---
+{{- if .Values.global.proxy.http.host }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -55,6 +56,15 @@ spec:
       component: proxy
   ingress:
   - ports:
-    - port: 80
-    from: []
+    - port: {{ .Values.global.proxy.http.port | default 80 }}
+    from:
+    - ipBlock:
+        cidr: {{ .Values.networkPolicies.proxy.cidr | default "0.0.0.0/0" }}
+  egress:
+  - ports:
+    - port: {{ .Values.global.proxy.http.port | default 80 }}
+    to:
+    - ipBlock:
+        cidr: {{ .Values.networkPolicies.proxy.cidr | default "0.0.0.0/0" }}
+{{- end }}
 {{- end }}

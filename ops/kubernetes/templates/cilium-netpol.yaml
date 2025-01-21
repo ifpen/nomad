@@ -1,4 +1,5 @@
 {{- if and .Values.networkPolicies.enabled (eq .Values.networkPolicies.type "cilium") }}
+{{- if .Values.global.proxy.http.host }}
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
@@ -24,6 +25,7 @@ spec:
       - port: "{{ .Values.global.proxy.http.port | default 80 }}"
       {{- end }}
         protocol: TCP
+{{- end }}
 
 ---
 apiVersion: cilium.io/v2
