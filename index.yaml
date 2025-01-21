@@ -3,7 +3,29 @@ entries:
   nomad:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T13:13:40.719982744Z"
+    created: "2025-01-21T13:54:57.888637852Z"
+    dependencies:
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 15.2.3
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 16.4.2
+    - condition: jupyterhub.enabled
+      name: jupyterhub
+      repository: https://jupyterhub.github.io/helm-chart
+      version: 3.0.3
+    description: A Helm chart to deploy NOMAD in Kubernetes
+    digest: 5049022a6f2d55c9a3087950aa903d6b3cded80199f35c765255ad31555ac53d
+    name: nomad
+    urls:
+    - nomad-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-01-21T13:54:57.872903894Z"
     dependencies:
     - condition: rabbitmq.enabled
       name: rabbitmq
@@ -25,7 +47,7 @@ entries:
     version: 0.2.1
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T13:13:40.67399999Z"
+    created: "2025-01-21T13:54:57.850351546Z"
     dependencies:
     - condition: rabbitmq.enabled
       name: rabbitmq
@@ -47,7 +69,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T13:13:40.313488828Z"
+    created: "2025-01-21T13:54:57.66018352Z"
     dependencies:
     - condition: rabbitmq.enabled
       name: rabbitmq
@@ -73,7 +95,7 @@ entries:
     version: 0.1.13
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T13:13:40.265074276Z"
+    created: "2025-01-21T13:54:57.642269021Z"
     dependencies:
     - condition: rabbitmq.enabled
       name: rabbitmq
@@ -99,7 +121,7 @@ entries:
     version: 0.1.12
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T13:13:40.226624063Z"
+    created: "2025-01-21T13:54:57.627933108Z"
     dependencies:
     - condition: rabbitmq.enabled
       name: rabbitmq
@@ -125,7 +147,7 @@ entries:
     version: 0.1.11
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T13:13:40.202677779Z"
+    created: "2025-01-21T13:54:57.614262172Z"
     dependencies:
     - condition: rabbitmq.enabled
       name: rabbitmq
@@ -151,7 +173,7 @@ entries:
     version: 0.1.10
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T13:13:40.627931Z"
+    created: "2025-01-21T13:54:57.811382677Z"
     dependencies:
     - condition: rabbitmq.enabled
       name: rabbitmq
@@ -177,7 +199,7 @@ entries:
     version: 0.1.9
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T13:13:40.575781212Z"
+    created: "2025-01-21T13:54:57.792206502Z"
     dependencies:
     - condition: rabbitmq.enabled
       name: rabbitmq
@@ -203,7 +225,7 @@ entries:
     version: 0.1.8
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T13:13:40.529941412Z"
+    created: "2025-01-21T13:54:57.778338362Z"
     dependencies:
     - condition: rabbitmq.enabled
       name: rabbitmq
@@ -229,7 +251,7 @@ entries:
     version: 0.1.7
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T13:13:40.497947958Z"
+    created: "2025-01-21T13:54:57.764086902Z"
     dependencies:
     - condition: rabbitmq.enabled
       name: rabbitmq
@@ -255,7 +277,7 @@ entries:
     version: 0.1.6
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T13:13:40.466631245Z"
+    created: "2025-01-21T13:54:57.742078699Z"
     dependencies:
     - condition: rabbitmq.enabled
       name: rabbitmq
@@ -281,7 +303,7 @@ entries:
     version: 0.1.5
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T13:13:40.437025243Z"
+    created: "2025-01-21T13:54:57.713545584Z"
     dependencies:
     - condition: rabbitmq.enabled
       name: rabbitmq
@@ -307,7 +329,7 @@ entries:
     version: 0.1.4
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T13:13:40.409718789Z"
+    created: "2025-01-21T13:54:57.692035883Z"
     dependencies:
     - condition: rabbitmq.enabled
       name: rabbitmq
@@ -333,7 +355,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T13:13:40.380773324Z"
+    created: "2025-01-21T13:54:57.676284971Z"
     dependencies:
     - name: rabbitmq
       repository: https://charts.bitnami.com/bitnami
@@ -355,7 +377,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T13:13:40.186581442Z"
+    created: "2025-01-21T13:54:57.600016172Z"
     dependencies:
     - name: rabbitmq
       repository: https://charts.bitnami.com/bitnami
@@ -377,7 +399,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-01-21T13:13:40.171127624Z"
+    created: "2025-01-21T13:54:57.583309749Z"
     dependencies:
     - name: rabbitmq
       repository: https://charts.bitnami.com/bitnami
@@ -400,4 +422,4 @@ entries:
     urls:
     - nomad-0.1.0.tgz
     version: 0.1.0
-generated: "2025-01-21T13:13:40.155296802Z"
+generated: "2025-01-21T13:54:57.567478359Z"

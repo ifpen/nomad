@@ -1,4 +1,21 @@
 {{- if and .Values.networkPolicies.enabled (eq .Values.networkPolicies.type "calico") }}
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: allow-kube-api-access
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "-5"
+spec:
+  selector: all()
+  egress:
+  - action: Allow
+    destination:
+      selector: k8s:io.kubernetes.pod.namespace == 'kube-system'
+      ports:
+      - "443"
+
+---
 {{- if .Values.global.proxy.http.host }}
 apiVersion: projectcalico.org/v3
 kind: GlobalNetworkPolicy

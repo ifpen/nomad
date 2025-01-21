@@ -35,7 +35,7 @@ rabbitmq:
     storageClass: ""
     size: "5Gi"
     accessModes:
-      - ReadWriteMany
+      - ReadWriteOnce
   env:
     RABBITMQ_ERLANG_COOKIE: SWQOKODSQALRPCLNMEQG
     RABBITMQ_DEFAULT_USER: rabbitmq
@@ -60,7 +60,7 @@ mongodb:
     storageClass: ""
     size: "5Gi"
     accessModes:
-      - ReadWriteMany
+      - ReadWriteOnce
 
 app:
   replicaCount: 1
@@ -158,8 +158,19 @@ ingress:
       port: 80
 
 networkPolicies:
+  # Enable network policies for the cluster
   enabled: false
-  type: native # Possible values: native, cilium, calico
+  # Type of network policy implementation (native, cilium, calico)
+  type: native
+  # Network policy configuration for proxy access
   proxy:
     cidr: "" # CIDR for k8s native network policy
+  # List of allowed namespaces for cross-namespace communication
   allowedNamespaces: []
+
+  # Network policies include:
+  # - Allow access to kube-apiserver on port 443
+  # - Allow all traffic within the namespace
+  # - Allow proxy access based on configured CIDR
+  # - Allow RabbitMQ communication between components
+  # Policies are applied first during Helm install/upgrade via pre-install hooks
