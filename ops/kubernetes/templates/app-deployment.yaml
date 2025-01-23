@@ -75,7 +75,7 @@ spec:
           - name: shared-volume
             mountPath: /app/.volumes/fs
           - name: config-volume
-            mountPath: /app/.config/nomad.yaml
+            mountPath: /app/.config
             subPath: nomad.yaml
       volumes:
       - name: shared-volume
