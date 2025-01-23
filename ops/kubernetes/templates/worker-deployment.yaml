@@ -27,7 +27,7 @@ spec:
           - name: NOMAD_FS_EXTERNAL_WORKING_DIRECTORY
             value: /app/.volumes/fs
           - name: NOMAD_RABBITMQ_HOST
-            value: {{ if .Values.rabbitmq.enabled }}"{{ .Release.Name }}-rabbitmq"{{ else }}"{{ .Values.global.hosts.rabbitmq }}"{{ end }}
+            value: {{ if .Values.rabbitmq.enabled }}"rabbitmq"{{ else }}"{{ .Values.global.hosts.rabbitmq }}"{{ end }}
           - name: NOMAD_ELASTIC_HOST
             value: {{ if .Values.elasticsearch.enabled }}"{{ .Release.Name }}-elastic"{{ else }}"{{ .Values.global.hosts.elastic }}"{{ end }}
           - name: NOMAD_MONGO_HOST
