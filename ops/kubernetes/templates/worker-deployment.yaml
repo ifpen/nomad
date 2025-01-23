@@ -46,6 +46,7 @@ spec:
           {{- end }}
           - name: NO_PROXY
             value: {{ .Values.global.proxy.no_proxy | quote }}
+        command: ["./run-worker.sh"]
         resources:
           {{- toYaml .Values.worker.resources | nindent 10 }}
         volumeMounts:

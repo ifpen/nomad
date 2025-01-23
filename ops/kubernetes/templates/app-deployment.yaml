@@ -52,6 +52,7 @@ spec:
             value: {{ .Values.global.proxy.no_proxy | quote }}
         ports:
         - containerPort: 80
+        command: ["./run.sh"]
         resources:
           {{- toYaml .Values.app.resources | nindent 10 }}
         livenessProbe:
