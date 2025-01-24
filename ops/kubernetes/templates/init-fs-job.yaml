@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: init-fs
+  labels:
+    app: nomad
+    component: init-fs
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  template:
+    metadata:
+      labels:
+        app: nomad
+        component: init-fs
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      restartPolicy: Never
+      containers:
+      - name: init-fs
+        image: busybox:1.36
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            mkdir -p /app/.volumes/fs/north/users &&
+            mkdir -p /app/.volumes/fs/app/uploads &&
+            mkdir -p /app/.volumes/fs/worker/tmp &&
+            chmod -R 775 /app/.volumes/fs
+        volumeMounts:
+          - name: shared-volume
+            mountPath: /app/.volumes/fs
+      volumes:
+      - name: shared-volume
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-fs-pvc

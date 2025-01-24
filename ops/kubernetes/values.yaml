@@ -1,6 +1,8 @@
 global:
   storageClass: ""
   volumeSize: 10Gi
+  elastic:
+    port: 9200
   proxy:
     http:
       host: ""

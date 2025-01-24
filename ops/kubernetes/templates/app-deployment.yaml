@@ -17,6 +17,10 @@ spec:
         app: nomad
         component: app
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       containers:
       - name: app
         image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
@@ -32,6 +36,8 @@ spec:
             value: {{ if .Values.rabbitmq.enabled }}"rabbitmq"{{ else }}"{{ .Values.global.hosts.rabbitmq }}"{{ end }}
           - name: NOMAD_ELASTIC_HOST
             value: {{ if .Values.elasticsearch.enabled }}"{{ .Release.Name }}-elastic"{{ else }}"{{ .Values.global.hosts.elastic }}"{{ end }}
+          - name: NOMAD_ELASTIC_PORT
+            value: "{{ .Values.global.elastic.port }}"
           - name: NOMAD_MONGO_HOST
             value: {{ if .Values.mongodb.enabled }}"{{ .Release.Name }}-mongodb"{{ else }}"{{ .Values.global.hosts.mongodb }}"{{ end }}
           - name: NOMAD_MONGO_USERNAME
