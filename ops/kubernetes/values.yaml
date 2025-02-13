@@ -1,5 +1,5 @@
 global:
-  storageClass: ""
+  storageClass: "azurefile"
   volumeSize: 10Gi
   elastic:
     port: 9200
@@ -43,11 +43,10 @@ rabbitmq:
     size: "5Gi"
     accessModes:
       - ReadWriteOnce
-  env:
-    RABBITMQ_ERLANG_COOKIE: SWQOKODSQALRPCLNMEQG
-    RABBITMQ_DEFAULT_USER: rabbitmq
-    RABBITMQ_DEFAULT_PASS: rabbitmq
-    RABBITMQ_DEFAULT_VHOST: /
+  auth:
+    erlangCookie: SWQOKODSQALRPCLNMEQG
+    password: rabbitmq
+    username: rabbitmq
 
 mongodb:
   enabled: true
