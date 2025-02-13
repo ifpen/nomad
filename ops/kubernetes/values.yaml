@@ -151,3 +151,9 @@ networkPolicies:
   # - Allow proxy access based on configured CIDR
   # - Allow RabbitMQ communication between components
   # Policies are applied first during Helm install/upgrade via pre-install hooks
+
+elasticsearch:
+  enabled: true
+
+jupyterhub:
+  enabled: false

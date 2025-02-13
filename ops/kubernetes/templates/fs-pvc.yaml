@@ -6,7 +6,7 @@ metadata:
 metadata:
   annotations:
     "helm.sh/hook": post-install,post-upgrade
-    "helm.sh/hook-weight": "5"
+    "helm.sh/hook-weight": "4"
 spec:
   accessModes:
     {{- toYaml .Values.sharedVolume.accessModes | nindent 4 }}
