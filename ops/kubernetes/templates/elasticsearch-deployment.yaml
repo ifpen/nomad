@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-elastic
+  name: nomad-elastic
   labels:
-    app: {{ .Release.Name }}
+    app: nomad
     component: elasticsearch
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
+      app: nomad
       component: elasticsearch
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
+        app: nomad
         component: elasticsearch
     spec:
       initContainers:
@@ -54,14 +54,14 @@ spec:
       volumes:
       - name: elasticsearch-data
         persistentVolumeClaim:
-          claimName: {{ .Release.Name }}-elastic-pvc
+          claimName: nomad-elastic-pvc
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-elastic
+  name: nomad-elastic
   labels:
-    app: {{ .Release.Name }}
+    app: nomad
     component: elasticsearch
 spec:
   ports:
@@ -74,13 +74,13 @@ spec:
     protocol: TCP
     name: transport
   selector:
-    app: {{ .Release.Name }}
+    app: nomad
     component: elasticsearch
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Release.Name }}-elastic-pvc
+  name: nomad-elastic-pvc
 spec:
   accessModes:
     - ReadWriteOnce

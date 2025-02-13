@@ -47,7 +47,7 @@ Selector labels
 */}}
 {{- define "nomad.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "nomad.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/instance: nomad
 {{- end }}
 
 {{/*

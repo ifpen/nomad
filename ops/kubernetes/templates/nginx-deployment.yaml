@@ -2,18 +2,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-nginx
+  name: nomad-nginx
   labels:
-    app: {{ .Release.Name }}-nginx
+    app: nomad-nginx
 spec:
   replicas: {{ .Values.ingress.nginx.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-nginx
+      app: nomad-nginx
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-nginx
+        app: nomad-nginx
     spec:
       containers:
       - name: nginx
@@ -27,12 +27,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-nginx
+  name: nomad-nginx
 spec:
   type: {{ .Values.ingress.nginx.service.type }}
   ports:
   - port: {{ .Values.ingress.nginx.service.port }}
     targetPort: 80
   selector:
-    app: {{ .Release.Name }}-nginx
+    app: nomad-nginx
 {{- end }}

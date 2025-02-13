@@ -15,9 +15,9 @@ global:
     no_proxy: "localhost,127.0.0.1,.cluster.local,.svc,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,169.254.0.0/16"
   # Hosts configuration - override only if services are not installed by the chart
   hosts:
-    rabbitmq: "{{ .Release.Name }}-rabbitmq"
-    elastic: "{{ .Release.Name }}-elastic-master"
-    mongodb: "{{ .Release.Name }}-mongodb"
+    rabbitmq: "nomad-rabbitmq"
+    elastic: "nomad-elastic-master"
+    mongodb: "nomad-mongodb"
 
 sharedVolume:
   enabled: true
@@ -29,13 +29,13 @@ sharedVolume:
 rabbitmq:
   enabled: true
   commonLabels:
-    app: "{{ .Release.Name }}"
+    app: "nomad"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace \"+\" \"_\" }}"
-    release: "{{ .Release.Name }}"
+    release: "nomad"
     heritage: "{{ .Release.Service }}"
-  nameOverride: "{{ .Release.Name }}-rabbitmq"
+  nameOverride: "nomad-rabbitmq"
   condition: rabbitmq.enabled
-  fullnameOverride: "{{ .Release.Name }}-rabbitmq"
+  fullnameOverride: "nomad-rabbitmq"
   clusterDomain: cluster.local
   persistence:
     enabled: true
@@ -53,9 +53,9 @@ mongodb:
   condition: mongodb.enabled
   clusterDomain: cluster.local
   commonLabels:
-    app: "{{ .Release.Name }}"
+    app: "nomad"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace \"+\" \"_\" }}"
-    release: "{{ .Release.Name }}"
+    release: "nomad"
     heritage: "{{ .Release.Service }}"
   auth:
     enabled: true
