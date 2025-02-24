@@ -153,6 +153,7 @@ networkPolicies:
 
 elasticsearch:
   enabled: true
+  replicas: 1
 
 jupyterhub:
   enabled: false

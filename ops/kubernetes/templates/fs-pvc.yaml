@@ -7,6 +7,7 @@ metadata:
   annotations:
     "helm.sh/hook": pre-install
     "helm.sh/hook-weight": "-6"
+    "helm.sh/hook-delete-policy": never # Empêche la suppression
 spec:
   accessModes:
     {{- toYaml .Values.sharedVolume.accessModes | nindent 4 }}

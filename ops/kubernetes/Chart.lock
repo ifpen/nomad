@@ -8,5 +8,8 @@ dependencies:
 - name: jupyterhub
   repository: https://jupyterhub.github.io/helm-chart
   version: 3.0.3
-digest: sha256:d0ffeaaee6d7498a87ba236fd9f16a3f5aaf29e2e36f528c6632e84371a21b03
-generated: "2025-01-21T13:13:19.779250975Z"
+- name: elasticsearch
+  repository: https://helm.elastic.co
+  version: 7.17.3
+digest: sha256:0fc269f9c64af9be945a017761bef20db748889a1bc5930e708825cc5fcf372d
+generated: "2025-02-24T23:06:26.006720078Z"

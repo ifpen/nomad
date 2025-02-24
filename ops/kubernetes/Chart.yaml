@@ -1,7 +1,7 @@
 apiVersion: v2
 name: nomad
 description: A Helm chart to deploy NOMAD in Kubernetes
-version: 0.2.16
+version: 0.2.17
 appVersion: "1.0"
 dependencies:
   - name: rabbitmq
@@ -16,3 +16,7 @@ dependencies:
     version: 3.0.3
     repository: https://jupyterhub.github.io/helm-chart
     condition: jupyterhub.enabled
+  - name: elasticsearch
+    version: 7.17.3
+    repository: https://helm.elastic.co
+    condition: elasticsearch.enabled
