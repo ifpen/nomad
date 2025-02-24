@@ -6,7 +6,7 @@ metadata:
 metadata:
   annotations:
     "helm.sh/hook": pre-install
-    "helm.sh/hook-weight": "-6"
+    "helm.sh/hook-weight": "-5"
     "helm.sh/hook-delete-policy": never # Empêche la suppression
 spec:
   accessModes:
